@@ -27,7 +27,11 @@
 ################################################################################
 
 
+# print("WASP Med Start!")
+
+
 if "bpy" in locals():
+    # print("WASP Med importlib start")
     import importlib
     importlib.reload(waspmed_scan)
     importlib.reload(waspmed_sculpt)
@@ -36,8 +40,10 @@ if "bpy" in locals():
     importlib.reload(waspmed_crop)
     importlib.reload(waspmed_generate)
     importlib.reload(waspmed_print)
+    # print("WASP Med importlib end")
 
 else:
+    # print("WASP Med import start")
     from . import waspmed_scan
     from . import waspmed_sculpt
     from . import waspmed_generate
@@ -45,6 +51,7 @@ else:
     from . import waspmed_crop
     from . import waspmed_generate
     from . import waspmed_print
+    # print("WASP Med import end")
 
 import bpy, bmesh
 
@@ -52,13 +59,15 @@ bl_info = {
 	"name": "Waspmed",
 	"author": "WASP",
 	"version": (0, 0, 8),
-	"blender": (2, 91, 0),
+	"blender": (4, 2, 1),
 	"location": "",
 	"description": "Tools for medical devices",
 	"warning": "",
 	"wiki_url": ("https://github.com/wasproject/Blender-WASP-Med"),
 	"tracker_url": "",
 	"category": "Mesh"}
+
+print("WASP Med bl_info", bl_info)
 
 classes = (
     waspmed_scan.waspmed_object_prop,
@@ -93,10 +102,11 @@ classes = (
     waspmed_crop.WASPMED_PT_crop,
     waspmed_deform.WASPMED_PT_deform,
     waspmed_scan.WASPMED_PT_scan
-    )
+)
 
 
 def register():
+    print("WASP Med register start")
     from bpy.utils import register_class
     for cls in classes:
         register_class(cls)
@@ -104,11 +114,14 @@ def register():
         type=waspmed_scan.waspmed_object_prop)
     bpy.types.Scene.waspmed_prop = bpy.props.PointerProperty(
         type=waspmed_scan.waspmed_scene_prop)
+    print("WASP Med register end")
 
 def unregister():
+    print("WASP Med unregister start")
     from bpy.utils import unregister_class
     for cls in reversed(classes):
         unregister_class(cls)
+    print("WASP Med unregister end")
 
 if __name__ == "__main__":
     register()

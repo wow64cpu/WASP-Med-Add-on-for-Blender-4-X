@@ -430,6 +430,10 @@ class OBJECT_OT_wm_next(bpy.types.Operator):
         context.view_layer.objects.active = ob
         old_status = status_list[status]
         next_status = status_list[status+1]
+
+        # print("WASP Med Old Status", status, old_status)
+        # print("WASP Med Next Status", status + 1, next_status)
+
         if status == 0 and init_object:
             ob.name = "00_" + patientID + "_" + old_status
             user_col = ob.users_collection[0]
@@ -755,7 +759,7 @@ from bl_ui.properties_paint_common import (
         brush_texture_settings,
         #brush_texpaint_common,
         brush_mask_texture_settings,
-        )
+    )
 
 class View3DPanel:
     bl_space_type = 'VIEW_3D'
@@ -786,6 +790,7 @@ class WASPMED_PT_progress(View3DPaintPanel, bpy.types.Panel):
         except: return False
     '''
     def draw(self, context):
+        # print("WASPMED_PT_progress draw start")
         layout = self.layout
         col = layout.column(align=True)
         if context.scene.waspmed_prop.do_setup:
@@ -810,6 +815,7 @@ class WASPMED_PT_progress(View3DPaintPanel, bpy.types.Panel):
                 #    row.operator("object.convert", icon='EXPORT')#, text="")
                 else:
                     row.operator("object.wm_next", icon='FORWARD')#, text="")
+        # print("WASPMED_PT_progress draw end")
 
 class WASPMED_PT_scan(View3DPaintPanel, bpy.types.Panel):
 #class waspmed_scan_panel(, bpy.types.View3DPaintPanel):
@@ -866,7 +872,6 @@ class WASPMED_PT_scan(View3DPaintPanel, bpy.types.Panel):
         '''
         #col.template_preview(bpy.data.textures['.hidden'], show_buttons=False)
         col.separator()
-
 
         box = layout.box()
         col = box.column(align=True)

@@ -49,7 +49,7 @@ You can choose the behavior on the borders with standard profiles or with custom
 Also you have two tools: one for smoothing the support parts, one for cropping the scraps.
 <br>
 <h3><strong>Exporting the mesh</h3></strong>
-In this phase the mesh is generated and you have the possibility to export it and have it ready for the 3D printing or making further and different operation in the environment of Blender 2.8.
+In this phase the mesh is generated and you have the possibility to export it and have it ready for the 3D printing or making further and different operation in the environment of Blender 4.X.
 <br>
 <h3><strong>Utility</h3></strong>
 The add-on also features tools for the measuring of the circumference and the visualizing how much the model is modified in each phase.
