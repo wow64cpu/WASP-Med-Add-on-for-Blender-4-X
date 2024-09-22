@@ -18,10 +18,6 @@
 
 
 import bpy
-from mathutils import Vector
-import numpy as np
-from math import sqrt, radians
-import random
 
 
 class WASPMED_PT_print(bpy.types.Panel):
@@ -41,7 +37,7 @@ class WASPMED_PT_print(bpy.types.Panel):
     def poll(cls, context):
         try:
             ob = context.object
-            if ob.parent != None:
+            if ob.parent is not None:
                 ob = ob.parent
             status = ob.waspmed_prop.status
             is_mesh = ob.type == 'MESH'
@@ -51,7 +47,6 @@ class WASPMED_PT_print(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         col = layout.column(align=True)
-
 
         col.label(text="Shell Thickness:")#, icon='MOD_WARP')
         col.prop(context.object.waspmed_prop, "min_thickness")

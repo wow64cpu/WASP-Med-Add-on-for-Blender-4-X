@@ -17,17 +17,17 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
+from math import radians
+
 import bpy
-from mathutils import Vector
-import numpy as np
-from math import sqrt, radians
-import random
+
+from utils import draw_object_mode_panel
 
 
 class OBJECT_OT_wm_add_lattice_to_object(bpy.types.Operator):
     bl_idname = "object.wm_add_lattice_to_object"
     bl_label = "Add Lattice"
-    bl_description = ("")
+    bl_description = ""
     bl_options = {'REGISTER', 'UNDO'}
 
     locx : bpy.props.FloatProperty(
@@ -75,7 +75,7 @@ class OBJECT_OT_wm_add_lattice_to_object(bpy.types.Operator):
         if context.mode == 'OBJECT':
             ob = context.object
             if ob.type == 'MESH': return True
-            elif ob.type == 'LATTICE' and ob.parent != None: return True
+            elif ob.type == 'LATTICE' and ob.parent is not None: return True
             else: return False
         else: return False
 
@@ -133,10 +133,11 @@ class OBJECT_OT_wm_add_lattice_to_object(bpy.types.Operator):
         ob.modifiers["Lattice"].object = lattice
         return {'FINISHED'}
 
+
 class OBJECT_OT_wm_edit_lattice(bpy.types.Operator):
     bl_idname = "object.wm_edit_lattice"
     bl_label = "Edit Lattice"
-    bl_description = ("")
+    bl_description = ""
     bl_options = {'REGISTER', 'UNDO'}
 
     @classmethod
@@ -164,10 +165,11 @@ class OBJECT_OT_wm_edit_lattice(bpy.types.Operator):
         bpy.ops.object.mode_set(mode='EDIT')
         return {'FINISHED'}
 
+
 class OBJECT_OT_wm_rotate_sections(bpy.types.Operator):
     bl_idname = "object.wm_rotate_sections"
     bl_label = "Rotate Sections"
-    bl_description = ("")
+    bl_description = ""
     bl_options = {'REGISTER', 'UNDO'}
 
 
@@ -261,10 +263,10 @@ class WASPMED_PT_deform(bpy.types.Panel):
     def poll(cls, context):
         try:
             ob = context.object
-            if ob.parent != None:
+            if ob.parent is not None:
                 ob = ob.parent
             status = ob.waspmed_prop.status
-            is_lattice = ob.type == 'LATTICE' and ob.parent != None
+            is_lattice = ob.type == 'LATTICE' and ob.parent is not None
             is_mesh = ob.type == 'MESH'
             return ((status == 3 and is_mesh) or is_lattice) and not context.object.hide_viewport
         except: return False
@@ -285,13 +287,4 @@ class WASPMED_PT_deform(bpy.types.Panel):
         box = layout.box()
         col = box.column(align=True)
         #col.operator("view3d.ruler", text="Ruler", icon="ARROW_LEFTRIGHT")
-        if context.mode == 'OBJECT':
-            col.separator()
-            col.operator("object.wm_add_measure_plane", text="Add Measure Plane", icon='MESH_CIRCLE')
-            col.operator("object.wm_measure_circumference", text="Measure Circumferences", icon='DRIVER_DISTANCE')
-        col.separator()
-        col.operator("screen.region_quadview", text="Toggle Quad View", icon='VIEW3D')
-        col.separator()
-        row = col.row(align=True)
-        row.operator("ed.undo", icon='LOOP_BACK')
-        row.operator("ed.redo", icon='LOOP_FORWARDS')
+        draw_object_mode_panel(col, context)

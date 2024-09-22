@@ -17,11 +17,11 @@
 # ##### END GPL LICENSE BLOCK #####
 
 
-import bpy, bmesh, timeit
-from mathutils import Vector
-import numpy as np
-from math import sqrt, radians
-import random
+import bmesh
+import bpy
+import timeit
+
+from utils import draw_object_mode_panel
 
 '''
 class WASPMED_OT_smooth_weight(bpy.types.Operator):
@@ -270,9 +270,9 @@ class OBJECT_OT_wm_weight_thickness(bpy.types.Operator):
         #print("doing weight")
         all_weight = weight + [iso_val]*len(verts)
         #mult = 1/(1-iso_val)
-        for id in range(len(all_weight)):
-            #if False: w = (all_weight[id]-iso_val)*mult
-            w = all_weight[id]
+        for id_ in range(len(all_weight)):
+            #if False: w = (all_weight[id_]-iso_val)*mult
+            w = all_weight[id_]
             direction = bool_flip
             for i in range(len(iso_values)-1):
                 val0, val1 = iso_values[0], iso_values[-1]
@@ -285,12 +285,12 @@ class OBJECT_OT_wm_weight_thickness(bpy.types.Operator):
             if w > iso_values[-1]: w1 = not direction
             w2 = w1
             if w == iso_values[0]: w2 = 1
-            ob.vertex_groups[vertex_group_name].add([id], w1, 'REPLACE')
-            #ob.vertex_groups["Smooth"].add([id], w2, 'REPLACE')
-            #ob.vertex_groups["Smooth"].add([id], w>min_iso, 'REPLACE')
+            ob.vertex_groups[vertex_group_name].add([id_], w1, 'REPLACE')
+            #ob.vertex_groups["Smooth"].add([id_], w2, 'REPLACE')
+            #ob.vertex_groups["Smooth"].add([id_], w>min_iso, 'REPLACE')
         #print("weight done")
-        #for id in range(len(weight), len(ob.data.vertices)):
-        #    ob.vertex_groups[vertex_group_name].add([id], iso_val*0, 'ADD')
+        #for id_ in range(len(weight), len(ob.data.vertices)):
+        #    ob.vertex_groups[vertex_group_name].add([id_], iso_val*0, 'ADD')
 
 
         ob.vertex_groups.active_index = group_id
@@ -321,8 +321,8 @@ class OBJECT_OT_wm_weight_thickness(bpy.types.Operator):
             if bool_corset: p.material_index = 2
             elif not bool_body: p.material_index = 1
             if not bool_body:
-                for id in p.vertices:
-                    ob.vertex_groups["Smooth"].add([id], 1, 'REPLACE')
+                for id_ in p.vertices:
+                    ob.vertex_groups["Smooth"].add([id_], 1, 'REPLACE')
 
         # align new object
         ob.matrix_world = ob0.matrix_world
@@ -352,26 +352,28 @@ class OBJECT_OT_wm_weight_thickness(bpy.types.Operator):
 
         return {'FINISHED'}
 
+
 class OBJECT_OT_wm_set_weight_paint(bpy.types.Operator):
     bl_idname = "object.wm_set_weight_paint"
     bl_label = "Weight Paint"
-    bl_description = ("")
+    bl_description = ""
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
         ob = context.object
-        if ob.parent != None: ob = ob.parent
+        if ob.parent is not None: ob = ob.parent
         bpy.context.view_layer.objects.active = ob
         ob.select_set(True)
         bpy.ops.object.mode_set(mode='WEIGHT_PAINT')
         context.tool_settings.weight_paint.brush = bpy.data.brushes['Draw']
         return {'FINISHED'}
 
+
 class OBJECT_OT_wm_weight_add_subtract(bpy.types.Operator):
     bl_idname = "object.wm_weight_add_subtract"
     bl_label = "Change Brush"
     bl_options = {'REGISTER', 'UNDO'}
-    bl_description = ('Change brush mode')
+    bl_description = 'Change brush mode'
 
     def execute(self, context):
         context.tool_settings.weight_paint.brush = bpy.data.brushes['Draw']
@@ -386,10 +388,8 @@ class OBJECT_OT_wm_weight_add_subtract(bpy.types.Operator):
 ### Sculpt Tools ###
 from bl_ui.properties_paint_common import (
         UnifiedPaintPanel,
-        brush_texture_settings,
-        #brush_texpaint_common,
-        brush_mask_texture_settings,
-        )
+    #brush_texpaint_common,
+)
 
 class View3DPanel:
     bl_space_type = 'VIEW_3D'
@@ -419,7 +419,7 @@ class WASPMED_PT_generate(View3DPaintPanel, bpy.types.Panel):
     def poll(cls, context):
         try:
             ob = context.object
-            if ob.parent != None:
+            if ob.parent is not None:
                 ob = ob.parent
             status = ob.waspmed_prop.status
             is_mesh = ob.type == 'MESH'
@@ -455,13 +455,4 @@ class WASPMED_PT_generate(View3DPaintPanel, bpy.types.Panel):
         box = layout.box()
         col = box.column(align=True)
         #col.operator("view3d.ruler", text="Ruler", icon="ARROW_LEFTRIGHT")
-        if context.mode == 'OBJECT':
-            col.separator()
-            col.operator("object.wm_add_measure_plane", text="Add Measure Plane", icon='MESH_CIRCLE')
-            col.operator("object.wm_measure_circumference", text="Measure Circumferences", icon='DRIVER_DISTANCE')
-        col.separator()
-        col.operator("screen.region_quadview", text="Toggle Quad View", icon='VIEW3D')
-        col.separator()
-        row = col.row(align=True)
-        row.operator("ed.undo", icon='LOOP_BACK')
-        row.operator("ed.redo", icon='LOOP_FORWARDS')
+        draw_object_mode_panel(col, context)

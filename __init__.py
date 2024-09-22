@@ -70,8 +70,8 @@ bl_info = {
 print("WASP Med bl_info", bl_info)
 
 classes = (
-    waspmed_scan.waspmed_object_prop,
-    waspmed_scan.waspmed_scene_prop,
+    waspmed_scan.WASPMedObjectProp,
+    waspmed_scan.WASPMedSceneProp,
 
     waspmed_scan.SCENE_OT_wm_setup,
     waspmed_scan.OBJECT_OT_wm_auto_origin,
@@ -111,9 +111,9 @@ def register():
     for cls in classes:
         register_class(cls)
     bpy.types.Object.waspmed_prop = bpy.props.PointerProperty(
-        type=waspmed_scan.waspmed_object_prop)
+        type=waspmed_scan.WASPMedObjectProp)
     bpy.types.Scene.waspmed_prop = bpy.props.PointerProperty(
-        type=waspmed_scan.waspmed_scene_prop)
+        type=waspmed_scan.WASPMedSceneProp)
     print("WASP Med register end")
 
 def unregister():

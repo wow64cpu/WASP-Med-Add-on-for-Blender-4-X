@@ -18,10 +18,8 @@
 
 
 import bpy
-from mathutils import Vector
-import numpy as np
-from math import sqrt, radians
-import random
+
+from utils import draw_measurement_tools_panel
 
 '''
 def store_parameters(operator, ob):
@@ -63,12 +61,10 @@ class back(bpy.types.Operator):
         return {'FINISHED'}
 '''
 
-
-
 class OBJECT_OT_wm_set_sculpt(bpy.types.Operator):
     bl_idname = "object.wm_set_sculpt"
     bl_label = "Sculpt"
-    bl_description = ("")
+    bl_description = ""
     bl_options = {'REGISTER', 'UNDO'}
 
     def execute(self, context):
@@ -83,7 +79,7 @@ class OBJECT_OT_wm_set_sculpt(bpy.types.Operator):
 class OBJECT_OT_wm_set_draw(bpy.types.Operator):
     bl_idname = "object.wm_set_draw"
     bl_label = "Draw"
-    bl_description = ("")
+    bl_description = ""
     bl_options = {'REGISTER', 'UNDO'}
 
     @classmethod
@@ -100,7 +96,7 @@ class OBJECT_OT_wm_set_draw(bpy.types.Operator):
 class OBJECT_OT_wm_set_smooth(bpy.types.Operator):
     bl_idname = "object.wm_set_smooth"
     bl_label = "Smooth"
-    bl_description = ("")
+    bl_description = ""
     bl_options = {'REGISTER', 'UNDO'}
 
     @classmethod
@@ -117,7 +113,7 @@ class OBJECT_OT_wm_set_smooth(bpy.types.Operator):
 class OBJECT_OT_wm_set_grab(bpy.types.Operator):
     bl_idname = "object.wm_set_grab"
     bl_label = "Grab"
-    bl_description = ("")
+    bl_description = ""
     bl_options = {'REGISTER', 'UNDO'}
 
     @classmethod
@@ -134,14 +130,14 @@ class OBJECT_OT_wm_set_grab(bpy.types.Operator):
 ### Sculpt Tools ###
 from bl_ui.properties_paint_common import (
         UnifiedPaintPanel,
-        brush_texture_settings,
-        #brush_texpaint_common,
-        brush_mask_texture_settings,
-        )
+    #brush_texpaint_common,
+)
+
 
 class View3DPanel:
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
+
 
 class View3DPaintPanel(UnifiedPaintPanel):
     bl_space_type = 'VIEW_3D'
@@ -166,7 +162,7 @@ class WASPMED_PT_sculpt(View3DPaintPanel, bpy.types.Panel):
     def poll(cls, context):
         try:
             ob = context.object
-            if ob.parent != None:
+            if ob.parent is not None:
                 ob = ob.parent
             status = ob.waspmed_prop.status
             is_mesh = ob.type == 'MESH'
@@ -194,26 +190,5 @@ class WASPMED_PT_sculpt(View3DPaintPanel, bpy.types.Panel):
             col.operator("object.wm_set_sculpt", icon="SCULPTMODE_HLT")
 
         col.separator()
-        box = layout.box()
-        col = box.column(align=True)
 
-        #col.operator("view3d.ruler", text="Ruler", icon="ARROW_LEFTRIGHT")
-        #col.separator()
-        if context.mode == 'PAINT_WEIGHT':
-            col.operator("object.wm_check_differences",
-                            icon="ZOOM_SELECTED",
-                            text="Check Differences Off")
-        else:
-            col.operator("object.wm_check_differences",
-                            icon="ZOOM_SELECTED",
-                            text="Check Differences On")
-        if context.mode == 'OBJECT':
-            col.separator()
-            col.operator("object.wm_add_measure_plane", text="Add Measure Plane", icon='MESH_CIRCLE')
-            col.operator("object.wm_measure_circumference", text="Measure Circumferences", icon='DRIVER_DISTANCE')
-        col.separator()
-        col.operator("screen.region_quadview", text="Toggle Quad View", icon='VIEW3D')
-        col.separator()
-        row = col.row(align=True)
-        row.operator("ed.undo", icon='LOOP_BACK')
-        row.operator("ed.redo", icon='LOOP_FORWARDS')
+        draw_measurement_tools_panel(layout, context)
