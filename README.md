@@ -1,6 +1,6 @@
 <h1><strong>WASP Med Blender Add-on (BLENDER ADD-ON)</h1></strong>
 <br>
-<img src="https://www.3dwasp.com/wp-content/uploads/2019/07/Blenderwasp_big-1-1-1024x536.jpg" alt="WASP Med Blender Add-on">
+<img src="https://raw.githubusercontent.com/wow64cpu/WASP-Med-Add-on-for-Blender-4-X/refs/heads/master/Blenderwasp_big-1.jpg" alt="WASP Med Blender Add-on">
 <br>
 WASP Med Blender Add-on is developed by WASP MED with <strong>Alessandro Zomparelli</strong> for modeling orthoses starting from 3D scans.
 <br>
