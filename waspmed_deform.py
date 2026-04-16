@@ -21,7 +21,7 @@ from math import radians
 
 import bpy
 
-from utils import draw_object_mode_panel
+from .utils import draw_object_mode_panel
 
 
 class OBJECT_OT_wm_add_lattice_to_object(bpy.types.Operator):

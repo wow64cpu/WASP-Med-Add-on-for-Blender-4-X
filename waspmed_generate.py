@@ -21,7 +21,7 @@ import bmesh
 import bpy
 import timeit
 
-from utils import draw_object_mode_panel
+from .utils import draw_object_mode_panel
 
 '''
 class WASPMED_OT_smooth_weight(bpy.types.Operator):

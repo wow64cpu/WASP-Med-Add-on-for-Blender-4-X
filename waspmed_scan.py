@@ -22,7 +22,7 @@ from math import radians
 import bmesh
 import bpy
 
-from utils import draw_measurement_tools_panel
+from .utils import draw_measurement_tools_panel
 
 status_list = ["scan", "remesh", "sculpt", "deform", "crop", "create","generate", "print"]
 
@@ -56,7 +56,7 @@ def xray_shading(bool_xray):
                 space.shading.show_xray = bool_xray
 
 
-def update_smooth(context):
+def update_smooth(self, context):
     ob = context.object
     try:
         mod = ob.modifiers["CorrectiveSmooth"]
@@ -136,7 +136,7 @@ def update_trim_bottom(self, context):
     #    pass
 
 
-def update_thickness():
+def update_thickness(self, context):
     try:
         ob = bpy.context.object
         mod = ob.modifiers['Solidify']
@@ -156,7 +156,7 @@ def update_thickness():
         pass
 
 
-def update_crop():
+def update_crop(self, context):
     try:
         bpy.ops.object.crop_geometry()
     except:
@@ -463,7 +463,7 @@ class OBJECT_OT_wm_next(bpy.types.Operator):
         if status == 5:
             bpy.ops.object.wm_weight_thickness()
             new_ob = context.object
-            update_smooth(context)
+            update_smooth(self, context)
             new_ob.modifiers.new(type='MASK', name="Mask")
             bpy.ops.object.modifier_move_up(modifier = "Mask")
             #new_ob.modifiers["Mask"].vertex_group = "Smooth"

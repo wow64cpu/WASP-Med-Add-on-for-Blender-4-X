@@ -19,7 +19,7 @@
 
 import bpy
 
-from utils import draw_measurement_tools_panel
+from .utils import draw_measurement_tools_panel
 
 '''
 def store_parameters(operator, ob):
