@@ -23,6 +23,7 @@ import bmesh
 import bpy
 
 from .utils import draw_measurement_tools_panel
+from .utils import is_real_operator
 
 status_list = ["scan", "remesh", "sculpt", "deform", "crop", "create","generate", "print"]
 
@@ -812,18 +813,21 @@ class WASPMED_PT_progress(View3DPaintPanel, bpy.types.Panel):
                 else:
                     patient_name = context.object.waspmed_prop.patientID
                 col.label(text=patient_name, icon="OUTLINER_OB_ARMATURE")
-            except: col.label(text="Import new Patient",
-                icon="INFO")
+            except:
+                col.label(text="Import new Patient", icon="INFO")
             if context.object is not None:
                 col.separator()
                 row = col.row(align=True)
-                row.operator("object.wm_back", icon='BACK')#, text="")
+                row.operator("object.wm_back", icon='BACK')
                 if context.object.waspmed_prop.status == 7:
-                    row.operator("export_mesh.stl", icon='EXPORT').use_selection = True
-                #elif context.object.waspmed_prop.status == 6:
-                #    row.operator("object.convert", icon='EXPORT')#, text="")
+                    if is_real_operator(bpy.ops.wm.stl_export):
+                        row.operator("wm.stl_export", icon='EXPORT')
+                    elif is_real_operator(bpy.ops.export_mesh.stl):
+                        row.operator("export_mesh.stl", icon='EXPORT').use_selection = True
+                    else:
+                        row.label(text="STL export not available", icon='ERROR')
                 else:
-                    row.operator("object.wm_next", icon='FORWARD')#, text="")
+                    row.operator("object.wm_next", icon='FORWARD')
         # print("WASPMED_PT_progress draw end")
 
 
@@ -859,8 +863,23 @@ class WASPMED_PT_scan(View3DPaintPanel, bpy.types.Panel):
         if status is not 1:
             col.label(text="Import Patient:", icon="OUTLINER_OB_ARMATURE")
             row = col.row(align=True)
-            row.operator("import_scene.obj", text="OBJ")
-            row.operator("import_mesh.stl", text="STL")
+
+            # OBJ
+            if is_real_operator(bpy.ops.wm.obj_import):
+                row.operator("wm.obj_import", text="OBJ")
+            elif is_real_operator(bpy.ops.import_scene.obj):
+                row.operator("import_scene.obj", text="OBJ")
+            else:
+                row.label(text="OBJ not available", icon='ERROR')
+
+            # STL
+            if is_real_operator(bpy.ops.wm.stl_import):
+                row.operator("wm.stl_import", text="STL")
+            elif is_real_operator(bpy.ops.import_mesh.stl):
+                row.operator("import_mesh.stl", text="STL")
+            else:
+                row.label(text="STL not available", icon='ERROR')
+
             col.separator()
             col.operator("object.wm_auto_origin", icon='SHADING_BBOX')
             col.separator()

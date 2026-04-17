@@ -19,6 +19,13 @@
 
 import bpy
 
+def is_real_operator(op):
+    try:
+        repr(op)
+        return True
+    except:
+        return False
+
 def simple_to_mesh(ob):
     hide = False
     if ob.hide_viewport:
